@@ -1,5 +1,5 @@
 use super::traits::{Channel, ChannelMessage, SendMessage};
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use async_trait::async_trait;
 use parking_lot::Mutex;
 use std::sync::Arc;
@@ -1212,6 +1212,7 @@ mod tests {
                 assemblyai: None,
                 google: None,
                 local_whisper: None,
+                transcribe_non_ptt_audio: false,
             },
         );
         assert!(ch.transcription_manager.is_some());
@@ -1234,6 +1235,7 @@ mod tests {
                 assemblyai: None,
                 google: None,
                 local_whisper: None,
+                transcribe_non_ptt_audio: false,
             },
         );
         assert!(ch.transcription_manager.is_none());
@@ -1376,6 +1378,7 @@ mod tests {
                 assemblyai: None,
                 google: None,
                 local_whisper: None,
+                transcribe_non_ptt_audio: false,
             },
         );
 
@@ -1444,10 +1447,11 @@ mod tests {
                 google: None,
                 local_whisper: Some(crate::config::LocalWhisperConfig {
                     url: whisper_url,
-                    bearer_token: "test_token".to_string(),
+                    bearer_token: Some("test_token".to_string()),
                     max_audio_bytes: 25_000_000,
                     timeout_secs: 300,
                 }),
+                transcribe_non_ptt_audio: false,
             });
 
             let post = json!({
@@ -1493,10 +1497,11 @@ mod tests {
                 google: None,
                 local_whisper: Some(crate::config::LocalWhisperConfig {
                     url: mock_server.uri(),
-                    bearer_token: "test_token".to_string(),
+                    bearer_token: Some("test_token".to_string()),
                     max_audio_bytes: 25_000_000,
                     timeout_secs: 300,
                 }),
+                transcribe_non_ptt_audio: false,
             });
 
             let post = json!({
